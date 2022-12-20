@@ -6,7 +6,11 @@ function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
 
-  passwordText.value = password;
+  if (password) {
+    passwordText.value = password;
+  } else {
+    passwordText.value = "try again";
+  }
 }
 
 // Add event listener to generate button
@@ -19,15 +23,42 @@ var generatePassword = function () {
   var includeUpperCase = getIncludeUpperCase();
   var includeNumbers = getIncludeNumbers();
   var includeSpecialCharacters = getIncludeSpecialCharacters();
-
-  console.log(
-    passwordLength,
+  var characterPool = createCharacterPool(
     includeLowerCase,
     includeUpperCase,
     includeNumbers,
     includeSpecialCharacters
   );
+
+  var password = "";
+  if (characterPool) {
+    for (var i = 0; i < passwordLength; i++) {
+      password +=
+        characterPool[Math.floor(Math.random() * characterPool.length)];
+    }
+  }
+  return password;
 };
+
+function createCharacterPool(lowerCase, upperCase, numbers, specialCharacters) {
+  if (!lowerCase && !upperCase && !numbers && !specialCharacters) {
+    alert("You must select at least one password criteria. Try again.");
+    return;
+  }
+
+  var lowerCasePool = "abcdefghijklmnopqrstuvwxyz";
+  var upperCasePool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  var numbersPool = "1234567890";
+  var specialCharactersPool = "!@#$%&";
+  var characterPool = "";
+
+  if (lowerCase) characterPool += lowerCasePool;
+  if (upperCase) characterPool += upperCasePool;
+  if (numbers) characterPool += numbersPool;
+  if (specialCharacters) characterPool += specialCharactersPool;
+
+  return characterPool;
+}
 
 function getIncludeSpecialCharacters() {
   var includeSpecialCharacters = prompt(
